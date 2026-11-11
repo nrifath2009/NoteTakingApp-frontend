@@ -4,6 +4,7 @@ import { Link, Navigate, useLocation } from "react-router-dom";
 import { login } from "../api/auth";
 import { errorMessage } from "../api/client";
 import { useAuth } from "../context/useAuth";
+import { ROUTES } from "../routes";
 
 export function LoginPage() {
   const { user, loading, login: storeSession } = useAuth();
@@ -15,7 +16,7 @@ export function LoginPage() {
   const [submitting, setSubmitting] = useState(false);
 
   if (loading) return <p className="status">Loading...</p>;
-  if (user) return <Navigate to="/notes" replace />;
+  if (user) return <Navigate to={ROUTES.NOTES} replace />;
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -39,7 +40,13 @@ export function LoginPage() {
       <form onSubmit={onSubmit} className="stack">
         <label>
           Email
-          <input type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
+          <input
+            type="email"
+            autoComplete="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            required
+          />
         </label>
         <label>
           Password
@@ -56,7 +63,7 @@ export function LoginPage() {
         </button>
       </form>
       <p>
-        No account? <Link to="/register">Register</Link>
+        No account? <Link to={ROUTES.REGISTER}>Register</Link>
       </p>
     </section>
   );

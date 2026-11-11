@@ -3,7 +3,9 @@ import type { FormEvent } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { errorMessage, parseInterests } from "../api/client";
 import { createUser, getUser, updateUser } from "../api/users";
+import { USER_ROLE } from "../constants";
 import type { Role } from "../types";
+import { ROUTES } from "../routes";
 
 export function UserFormPage() {
   const { id } = useParams();
@@ -12,7 +14,7 @@ export function UserFormPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState<Role>("user");
+  const [role, setRole] = useState<Role>(USER_ROLE.USER);
   const [interests, setInterests] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(editing);
@@ -46,9 +48,17 @@ export function UserFormPage() {
     setError("");
     const interestList = parseInterests(interests);
     try {
-      if (id) await updateUser(id, { name, email, role, interests: interestList });
-      else await createUser({ name, email, password, role, interests: interestList });
-      navigate("/admin/users");
+      if (id)
+        await updateUser(id, { name, email, role, interests: interestList });
+      else
+        await createUser({
+          name,
+          email,
+          password,
+          role,
+          interests: interestList,
+        });
+      navigate(ROUTES.ADMIN_USERS);
     } catch (caught) {
       setError(errorMessage(caught));
     } finally {
@@ -65,11 +75,20 @@ export function UserFormPage() {
         <form onSubmit={onSubmit} className="stack">
           <label>
             Name
-            <input value={name} onChange={(event) => setName(event.target.value)} required />
+            <input
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              required
+            />
           </label>
           <label>
             Email
-            <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
+            <input
+              type="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              required
+            />
           </label>
           {editing ? null : (
             <label>
@@ -85,9 +104,12 @@ export function UserFormPage() {
           )}
           <label>
             Role
-            <select value={role} onChange={(event) => setRole(event.target.value as Role)}>
-              <option value="user">user</option>
-              <option value="admin">admin</option>
+            <select
+              value={role}
+              onChange={(event) => setRole(event.target.value as Role)}
+            >
+              <option value={USER_ROLE.USER}>{USER_ROLE.USER}</option>
+              <option value={USER_ROLE.ADMIN}>{USER_ROLE.ADMIN}</option>
             </select>
           </label>
           <label>
@@ -102,7 +124,7 @@ export function UserFormPage() {
             <button type="submit" disabled={submitting}>
               {submitting ? "Saving..." : "Save"}
             </button>
-            <Link to="/admin/users">Cancel</Link>
+            <Link to={ROUTES.ADMIN_USERS}>Cancel</Link>
           </div>
         </form>
       ) : null}

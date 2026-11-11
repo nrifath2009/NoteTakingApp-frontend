@@ -4,6 +4,7 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import { register } from "../api/auth";
 import { errorMessage, parseInterests } from "../api/client";
 import { useAuth } from "../context/useAuth";
+import { ROUTES } from "../routes";
 
 export function RegisterPage() {
   const { user, loading } = useAuth();
@@ -16,15 +17,22 @@ export function RegisterPage() {
   const [submitting, setSubmitting] = useState(false);
 
   if (loading) return <p className="status">Loading...</p>;
-  if (user) return <Navigate to="/notes" replace />;
+  if (user) return <Navigate to={ROUTES.NOTES} replace />;
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
     setSubmitting(true);
     setError("");
     try {
-      await register({ name, email, password, interests: parseInterests(interests) });
-      navigate("/login", { state: { message: "Account created. Log in to continue." } });
+      await register({
+        name,
+        email,
+        password,
+        interests: parseInterests(interests),
+      });
+      navigate(ROUTES.LOGIN, {
+        state: { message: "Account created. Log in to continue." },
+      });
     } catch (caught) {
       setError(errorMessage(caught));
     } finally {
@@ -39,11 +47,21 @@ export function RegisterPage() {
       <form onSubmit={onSubmit} className="stack">
         <label>
           Name
-          <input value={name} onChange={(event) => setName(event.target.value)} required />
+          <input
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+            required
+          />
         </label>
         <label>
           Email
-          <input type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
+          <input
+            type="email"
+            autoComplete="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            required
+          />
         </label>
         <label>
           Password
@@ -68,7 +86,7 @@ export function RegisterPage() {
         </button>
       </form>
       <p>
-        Already registered? <Link to="/login">Log in</Link>
+        Already registered? <Link to={ROUTES.LOGIN}>Log in</Link>
       </p>
     </section>
   );

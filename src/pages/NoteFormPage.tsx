@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { errorMessage } from "../api/client";
+import { ROUTES } from "../routes";
 import { createNote, getNote, updateNote } from "../api/notes";
 
 export function NoteFormPage() {
@@ -41,7 +42,7 @@ export function NoteFormPage() {
     try {
       if (id) await updateNote(id, { title, content });
       else await createNote({ title, content });
-      navigate("/notes");
+      navigate(ROUTES.NOTES);
     } catch (caught) {
       setError(errorMessage(caught));
     } finally {
@@ -58,17 +59,25 @@ export function NoteFormPage() {
         <form onSubmit={onSubmit} className="stack">
           <label>
             Title
-            <input value={title} onChange={(event) => setTitle(event.target.value)} required />
+            <input
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
+              required
+            />
           </label>
           <label>
             Content
-            <textarea value={content} onChange={(event) => setContent(event.target.value)} required />
+            <textarea
+              value={content}
+              onChange={(event) => setContent(event.target.value)}
+              required
+            />
           </label>
           <div className="actions">
             <button type="submit" disabled={submitting}>
               {submitting ? "Saving..." : "Save"}
             </button>
-            <Link to="/notes">Cancel</Link>
+            <Link to={ROUTES.NOTES}>Cancel</Link>
           </div>
         </form>
       ) : null}

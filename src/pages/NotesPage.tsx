@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { errorMessage, formatWhen } from "../api/client";
 import { deleteNote, listNotes } from "../api/notes";
 import { Pagination } from "../components/Pagination";
+import { ROUTES } from "../routes";
 import type { Note, Pagination as PageInfo } from "../types";
 
 export function NotesPage() {
@@ -53,7 +54,7 @@ export function NotesPage() {
     <section className="card">
       <div className="row">
         <h1>Your notes</h1>
-        <Link className="button" to="/notes/new">
+        <Link className="button" to={ROUTES.NEW_NOTE}>
           New note
         </Link>
       </div>
@@ -76,7 +77,11 @@ export function NotesPage() {
                 <td>{formatWhen(note.updatedAt)}</td>
                 <td className="actions">
                   <Link to={`/notes/${note.id}/edit`}>Edit</Link>
-                  <button type="button" className="danger" onClick={() => onDelete(note.id)}>
+                  <button
+                    type="button"
+                    className="danger"
+                    onClick={() => onDelete(note.id)}
+                  >
                     Delete
                   </button>
                 </td>

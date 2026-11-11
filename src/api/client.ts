@@ -1,13 +1,13 @@
 import axios from "axios";
-
-const TOKEN_KEY = "accessToken";
+import { API_CONFIG, STORAGE_KEYS } from "../constants";
+import { ROUTES } from "../routes";
 
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
+  baseURL: import.meta.env.VITE_API_URL || API_CONFIG.DEFAULT_BASE_URL,
 });
 
 api.interceptors.request.use((config) => {
-  const token = sessionStorage.getItem(TOKEN_KEY);
+  const token = sessionStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -18,10 +18,10 @@ api.interceptors.response.use(
   (response) => response,
   (error: unknown) => {
     if (axios.isAxiosError(error) && error.response?.status === 401) {
-      sessionStorage.removeItem(TOKEN_KEY);
+      sessionStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
       const path = window.location.pathname;
-      if (path !== "/login" && path !== "/register") {
-        window.location.assign("/login");
+      if (path !== ROUTES.LOGIN && path !== ROUTES.REGISTER) {
+        window.location.assign(ROUTES.LOGIN);
       }
     }
     return Promise.reject(error);

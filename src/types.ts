@@ -1,4 +1,6 @@
-export type Role = "user" | "admin";
+import type { Role } from "./constants";
+
+export type { Role } from "./constants";
 
 export type User = {
   id: string;

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
+import { ROUTES } from "../routes";
 
 export function AccountMenu() {
   const { user, logout } = useAuth();
@@ -40,7 +41,11 @@ export function AccountMenu() {
       {open ? (
         <div className="account-menu" role="menu">
           <p className="role-badge">{user?.role}</p>
-          <NavLink to="/account" role="menuitem" onClick={() => setOpen(false)}>
+          <NavLink
+            to={ROUTES.ACCOUNT}
+            role="menuitem"
+            onClick={() => setOpen(false)}
+          >
             Profile
           </NavLink>
           <button type="button" role="menuitem" onClick={logout}>

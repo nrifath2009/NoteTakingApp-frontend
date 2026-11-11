@@ -1,30 +1,33 @@
+import { APP_NAME } from "./constants";
+import { ROUTES, ROUTE_PATTERNS } from "./routes";
+
 export interface Crumb {
   label: string;
   to?: string;
 }
 
 export function crumbsFor(pathname: string): Crumb[] {
-  if (pathname === "/notes") return [{ label: "Notes" }];
-  if (pathname === "/notes/new") return [{ to: "/notes", label: "Notes" }, { label: "New note" }];
-  if (/^\/notes\/[^/]+\/edit$/.test(pathname)) {
-    return [{ to: "/notes", label: "Notes" }, { label: "Edit note" }];
+  if (pathname === ROUTES.NOTES) return [{ label: "Notes" }];
+  if (pathname === ROUTES.NEW_NOTE) return [{ to: ROUTES.NOTES, label: "Notes" }, { label: "New note" }];
+  if (ROUTE_PATTERNS.EDIT_NOTE.test(pathname)) {
+    return [{ to: ROUTES.NOTES, label: "Notes" }, { label: "Edit note" }];
   }
-  if (pathname === "/account") return [{ label: "Profile" }];
-  if (pathname === "/admin/users") return [{ label: "Users" }];
-  if (pathname === "/admin/users/new") {
-    return [{ to: "/admin/users", label: "Users" }, { label: "New user" }];
+  if (pathname === ROUTES.ACCOUNT) return [{ label: "Profile" }];
+  if (pathname === ROUTES.ADMIN_USERS) return [{ label: "Users" }];
+  if (pathname === ROUTES.NEW_ADMIN_USER) {
+    return [{ to: ROUTES.ADMIN_USERS, label: "Users" }, { label: "New user" }];
   }
-  if (/^\/admin\/users\/[^/]+\/edit$/.test(pathname)) {
-    return [{ to: "/admin/users", label: "Users" }, { label: "Edit user" }];
+  if (ROUTE_PATTERNS.EDIT_ADMIN_USER.test(pathname)) {
+    return [{ to: ROUTES.ADMIN_USERS, label: "Users" }, { label: "Edit user" }];
   }
-  if (pathname === "/admin/notes") return [{ label: "All notes" }];
-  if (pathname === "/admin/analytics") return [{ label: "Interests" }];
+  if (pathname === ROUTES.ADMIN_NOTES) return [{ label: "All notes" }];
+  if (pathname === ROUTES.ADMIN_ANALYTICS) return [{ label: "Interests" }];
   return [];
 }
 
 export function pageTitle(pathname: string): string {
-  if (pathname === "/login") return "Log in · Secure Notes";
-  if (pathname === "/register") return "Register · Secure Notes";
+  if (pathname === ROUTES.LOGIN) return `Log in · ${APP_NAME}`;
+  if (pathname === ROUTES.REGISTER) return `Register · ${APP_NAME}`;
   const current = crumbsFor(pathname).at(-1)?.label;
-  return current ? `${current} · Secure Notes` : "Secure Notes";
+  return current ? `${current} · ${APP_NAME}` : APP_NAME;
 }

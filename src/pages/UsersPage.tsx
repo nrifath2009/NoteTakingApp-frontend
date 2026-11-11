@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { errorMessage } from "../api/client";
 import { deleteUser, listUsers } from "../api/users";
 import { Pagination } from "../components/Pagination";
+import { ROUTES, routeHref } from "../routes";
 import type { Pagination as PageInfo, User } from "../types";
 
 export function UsersPage() {
@@ -53,7 +54,7 @@ export function UsersPage() {
     <section className="card">
       <div className="row">
         <h1>Users</h1>
-        <Link className="button" to="/admin/users/new">
+        <Link className="button" to={ROUTES.NEW_ADMIN_USER}>
           New user
         </Link>
       </div>
@@ -79,8 +80,12 @@ export function UsersPage() {
                 <td>{user.role}</td>
                 <td>{user.interests.join(", ") || "—"}</td>
                 <td className="actions">
-                  <Link to={`/admin/users/${user.id}/edit`}>Edit</Link>
-                  <button type="button" className="danger" onClick={() => onDelete(user.id)}>
+                  <Link to={routeHref.editAdminUser(user.id)}>Edit</Link>
+                  <button
+                    type="button"
+                    className="danger"
+                    onClick={() => onDelete(user.id)}
+                  >
                     Delete
                   </button>
                 </td>

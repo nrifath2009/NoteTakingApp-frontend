@@ -2,14 +2,17 @@ import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { me } from "../api/auth";
 import type { User } from "../types";
+import { STORAGE_KEYS } from "../constants";
 import { AuthContext } from "./useAuth";
 
-const TOKEN_KEY = "accessToken";
-
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [token, setToken] = useState<string | null>(() => sessionStorage.getItem(TOKEN_KEY));
+  const [token, setToken] = useState<string | null>(() =>
+    sessionStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN),
+  );
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(() => sessionStorage.getItem(TOKEN_KEY) !== null);
+  const [loading, setLoading] = useState(
+    () => sessionStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN) !== null,
+  );
 
   useEffect(() => {
     if (!token) return;
@@ -21,7 +24,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       })
       .catch(() => {
         if (!active) return;
-        sessionStorage.removeItem(TOKEN_KEY);
+        sessionStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
         setToken(null);
         setUser(null);
       })
@@ -35,7 +38,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [token]);
 
   function login(nextToken: string, nextUser: User) {
-    sessionStorage.setItem(TOKEN_KEY, nextToken);
+    sessionStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, nextToken);
     setToken(nextToken);
     setUser(nextUser);
     setLoading(false);
@@ -46,10 +49,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   function logout() {
-    sessionStorage.removeItem(TOKEN_KEY);
+    sessionStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
     setToken(null);
     setUser(null);
   }
 
-  return <AuthContext.Provider value={{ user, loading, login, updateUser, logout }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, loading, login, updateUser, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }

@@ -1,14 +1,16 @@
 import { useEffect } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
+import { APP_NAME, USER_ROLE } from "../constants";
 import { crumbsFor, pageTitle } from "../navigation";
+import { ROUTES } from "../routes";
 import { AccountMenu } from "./AccountMenu";
 
 export function Layout() {
   const { user } = useAuth();
   const { pathname } = useLocation();
   const crumbs = crumbsFor(pathname);
-  const admin = user?.role === "admin";
+  const admin = user?.role === USER_ROLE.ADMIN;
 
   useEffect(() => {
     document.title = pageTitle(pathname);
@@ -21,18 +23,18 @@ export function Layout() {
       </a>
       <header className="topbar">
         <div className="topbar-start">
-          <Link to="/notes" className="brand">
-            Secure Notes
+          <Link to={ROUTES.NOTES} className="brand">
+            {APP_NAME}
           </Link>
           <nav aria-label="Primary">
-            <NavLink to="/notes">Notes</NavLink>
+            <NavLink to={ROUTES.NOTES}>Notes</NavLink>
           </nav>
           {admin ? (
             <nav className="nav-admin" aria-label="Administration">
               <span className="nav-label">Admin</span>
-              <NavLink to="/admin/users">Users</NavLink>
-              <NavLink to="/admin/notes">All notes</NavLink>
-              <NavLink to="/admin/analytics">Interests</NavLink>
+              <NavLink to={ROUTES.ADMIN_USERS}>Users</NavLink>
+              <NavLink to={ROUTES.ADMIN_NOTES}>All notes</NavLink>
+              <NavLink to={ROUTES.ADMIN_ANALYTICS}>Interests</NavLink>
             </nav>
           ) : null}
         </div>
@@ -73,8 +75,8 @@ export function AuthLayout() {
   return (
     <div className="shell">
       <header className="topbar">
-        <Link to="/login" className="brand">
-          Secure Notes
+        <Link to={ROUTES.LOGIN} className="brand">
+          {APP_NAME}
         </Link>
       </header>
       <main id="content">
