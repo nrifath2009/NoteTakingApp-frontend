@@ -10,7 +10,7 @@ export const STORAGE_KEYS = {
 } as const;
 
 export const API_CONFIG = {
-  DEFAULT_BASE_URL: "http://localhost:5000/api",
+  DEFAULT_BASE_URL: "https://notetakingapp-backend-production.up.railway.app/api",
   PAGE_SIZE: 10,
 } as const;
 
